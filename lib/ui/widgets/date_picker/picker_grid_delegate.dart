@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class PickerGridDelegate extends SliverGridDelegate {
@@ -28,7 +29,7 @@ class PickerGridDelegate extends SliverGridDelegate {
       childCrossAxisExtent: tileWidth - columnPadding,
       childMainAxisExtent: rowExtent - rowPadding,
       crossAxisCount: columnCount,
-      crossAxisStride: tileWidth + 2,
+      crossAxisStride: tileWidth ,
       mainAxisStride: rowStride,
       reverseCrossAxis: axisDirectionIsReversed(constraints.crossAxisDirection),
     );

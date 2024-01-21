@@ -1,4 +1,4 @@
-import 'package:employee_manager/cubits/date_label_change_cubit.dart';
+import 'package:employee_manager/cubits/date_picker_cubit.dart';
 import 'package:employee_manager/data/models/employee_podo.dart';
 import 'package:employee_manager/ui/widgets/custom_icons.dart';
 import 'package:employee_manager/ui/widgets/date_picker/my_date_picker.dart';
@@ -210,7 +210,7 @@ class _AddEditEmployeeViewState extends State<AddEditEmployeeView> {
               contentPadding: EdgeInsets.zero,
               insetPadding: const EdgeInsets.all(16.0),
               content: BlocProvider(
-                create: (_) => DateLabelChangeCubit(isJoinDate: isJoinDate),
+                create: (_) => DatePickerCubit(isJoinDate: isJoinDate),
                 child: MyDatePicker(
                     onDateSelected: (date) {
                       if (isJoinDate) {

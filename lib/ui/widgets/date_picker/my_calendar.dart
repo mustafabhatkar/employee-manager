@@ -30,6 +30,7 @@ class MyCalendar extends StatefulWidget {
     this.highlightColor,
     this.splashColor,
     this.splashRadius,
+    
   }) {
     assert(!minDate.isAfter(maxDate), "minDate can't be after maxDate");
   }
@@ -39,6 +40,7 @@ class MyCalendar extends StatefulWidget {
   final DateTime? currentDate;
 
   final DateTime? selectedDate;
+
 
   final ValueChanged<DateTime>? onDateSelected;
 
