@@ -1,10 +1,11 @@
+import 'package:employee_manager/cubits/date_label_change_cubit.dart';
 import 'package:employee_manager/ui/widgets/date_picker/shortcuts/shortcut_button.dart';
 import 'package:employee_manager/utils/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ResignDateShortcuts extends StatefulWidget {
-  final Function(int) onSelected;
-  const ResignDateShortcuts({super.key, required this.onSelected});
+  const ResignDateShortcuts({super.key});
 
   @override
   State<ResignDateShortcuts> createState() => _ResignDateShortcutsState();
@@ -18,26 +19,25 @@ class _ResignDateShortcutsState extends State<ResignDateShortcuts> {
       children: [
         ShortCutButton(
           isSelected: selected == 0,
-          onTap: () {
-            setState(() {
-              selected = 0;
-              widget.onSelected(0);
-            });
-          },
+          onTap: () => changeDate(0),
           text: Strings.noDate,
         ),
         const SizedBox(width: 16.0),
         ShortCutButton(
           isSelected: selected == 1,
-          onTap: () {
-            setState(() {
-              selected = 1;
-              widget.onSelected(1);
-            });
-          },
+          onTap: () => changeDate(1),
           text: Strings.today,
         ),
       ],
     );
+  }
+
+  changeDate(int index) {
+    setState(() {
+      selected = index;
+    });
+    context
+        .read<DateLabelChangeCubit>()
+        .onDateChangeByShortcut(selectedShortcut: index);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:employee_manager/cubits/date_label_change_cubit.dart';
 import 'package:employee_manager/data/models/employee_podo.dart';
 import 'package:employee_manager/ui/widgets/custom_icons.dart';
 import 'package:employee_manager/ui/widgets/date_picker/my_date_picker.dart';
@@ -8,6 +9,8 @@ import 'package:employee_manager/utils/title_case_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 class AddEditEmployeePage extends StatefulWidget {
   final Employee? employee;
   const AddEditEmployeePage({super.key, this.employee});
@@ -17,6 +20,21 @@ class AddEditEmployeePage extends StatefulWidget {
 }
 
 class _AddEditEmployeePageState extends State<AddEditEmployeePage> {
+  @override
+  Widget build(BuildContext context) {
+    return AddEditEmployeeView(employee: widget.employee);
+  }
+}
+
+class AddEditEmployeeView extends StatefulWidget {
+  final Employee? employee;
+  const AddEditEmployeeView({super.key, this.employee});
+
+  @override
+  State<AddEditEmployeeView> createState() => _AddEditEmployeeViewState();
+}
+
+class _AddEditEmployeeViewState extends State<AddEditEmployeeView> {
   final nameTextController = TextEditingController();
   final roleTextController = TextEditingController();
   final joinDateController = TextEditingController();
@@ -181,25 +199,30 @@ class _AddEditEmployeePageState extends State<AddEditEmployeePage> {
     );
   }
 
-  showMyDatePicker({bool isJoinDate = true}) => showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(16.0))),
-            contentPadding: EdgeInsets.zero,
-            insetPadding: const EdgeInsets.all(16.0),
-            content: MyDatePicker(
-                onDateSelected: (date) {
-                  if (isJoinDate) {
-                    joinDateController.text = date.toEditFormat();
-                  }else{
-                    resignDateController.text = date.toEditFormat();
-                  }
-                },
-                isJoinDate: isJoinDate));
-      });
+  showMyDatePicker({bool isJoinDate = true}) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16.0))),
+              contentPadding: EdgeInsets.zero,
+              insetPadding: const EdgeInsets.all(16.0),
+              content: BlocProvider(
+                create: (_) => DateLabelChangeCubit(isJoinDate: isJoinDate),
+                child: MyDatePicker(
+                    onDateSelected: (date) {
+                      if (isJoinDate) {
+                        joinDateController.text = date.toEditFormat();
+                      } else {
+                        resignDateController.text = date.toEditFormat();
+                      }
+                    },
+                    isJoinDate: isJoinDate),
+              ));
+        });
+  }
 
   @override
   void dispose() {

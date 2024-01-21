@@ -1,10 +1,11 @@
+import 'package:employee_manager/cubits/date_label_change_cubit.dart';
 import 'package:employee_manager/ui/widgets/custom_icons.dart';
 import 'package:employee_manager/ui/widgets/date_picker/my_calendar.dart';
 import 'package:employee_manager/ui/widgets/date_picker/shortcuts/join_date_shortcuts.dart';
 import 'package:employee_manager/ui/widgets/date_picker/shortcuts/resign_data_shortcuts.dart';
-import 'package:employee_manager/utils/extension.dart';
 import 'package:employee_manager/utils/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyDatePicker extends StatefulWidget {
@@ -19,14 +20,6 @@ class MyDatePicker extends StatefulWidget {
 
 class _MyDatePickerState extends State<MyDatePicker> {
   DateTime currentDate = DateTime.now();
-  late String selectedDate;
-
-  @override
-  void initState() {
-    selectedDate =
-        widget.isJoinDate ? currentDate.toEditFormat() : Strings.noDate;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +35,7 @@ class _MyDatePickerState extends State<MyDatePicker> {
               children: [
                 widget.isJoinDate
                     ? const JoinDateShortcuts()
-                    : ResignDateShortcuts(onSelected: (index) {
-                      
-                    }),
+                    : const ResignDateShortcuts(),
                 const SizedBox(height: 25.0),
                 MyCalendar(
                   padding: EdgeInsets.zero,
@@ -84,10 +75,10 @@ class _MyDatePickerState extends State<MyDatePicker> {
                       .titleMedium!
                       .copyWith(fontSize: 15),
                   onDateSelected: (date) {
-                    setState(() {
-                      currentDate = date;
-                      selectedDate = currentDate.toEditFormat();
-                    });
+                    currentDate = date;
+                    context
+                        .read<DateLabelChangeCubit>()
+                        .onDateChangeManually(date: date);
                   },
                 )
               ],
@@ -100,8 +91,11 @@ class _MyDatePickerState extends State<MyDatePicker> {
               children: [
                 const Icon(CustomIcons.calendar),
                 const SizedBox(width: 12.0),
-                Text(selectedDate,
-                    style: Theme.of(context).textTheme.titleMedium),
+                BlocBuilder<DateLabelChangeCubit, String>(
+                    builder: (context, dateString) {
+                  return Text(dateString,
+                      style: Theme.of(context).textTheme.titleMedium);
+                }),
                 const Spacer(),
                 SizedBox(
                   width: 74,
