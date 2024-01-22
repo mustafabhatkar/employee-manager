@@ -26,123 +26,125 @@ class _MyDatePickerState extends State<MyDatePicker> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(
-                top: 24.0, left: 16.0, right: 16.0, bottom: 0.0),
-            child: Column(
-              children: [
-                widget.isJoinDate
-                    ? const JoinDateShortcuts()
-                    : const ResignDateShortcuts(),
-                const SizedBox(height: 25.0),
-                BlocBuilder<DatePickerCubit, MyDateTime>(
-                    builder: (context, myDate) {
-                  myDateTime = myDate;
-                  return MyCalendar(
-                    selectedDate: myDate.date,
-                    padding: EdgeInsets.zero,
-                    currentDateDecoration:
-                        !widget.isJoinDate ? const BoxDecoration() : null,
-                    minDate: DateTime(2000, 1, 1),
-                    maxDate: DateTime.now().add(const Duration(days: 182)),
-                    slidersColor: const Color(0xff949C9E),
-                    slidersSize: 45,
-                    disbaledCellsTextStyle: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(
-                            fontSize: 15,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.30)),
-                    currentDateTextStyle: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(
-                            fontSize: 15,
-                            color: Theme.of(context).colorScheme.secondary),
-                    enabledCellsTextStyle: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(fontSize: 15),
-                    selectedCellTextStyle: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(fontSize: 15, color: Colors.white),
-                    leadingDateTextStyle: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18.0,
-                        color: Theme.of(context).textTheme.titleMedium!.color),
-                    daysOfTheWeekTextStyle: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(fontSize: 15),
-                    onDateSelected: (date) {
-                      context
-                          .read<DatePickerCubit>()
-                          .onDateChangeManually(date: date);
-                    },
-                  );
-                })
-              ],
-            ),
-          ),
-          BlocBuilder<DatePickerCubit, MyDateTime>(
-              builder: (context, myDateTime) {
-            return Visibility(
-              visible: !myDateTime.isValid,
-              child: Container(
-                  margin: const EdgeInsets.all(16),
-                  child: Text(myDateTime.errorMessage,
-                      style: Theme.of(context)
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(
+                  top: 24.0, left: 16.0, right: 16.0, bottom: 0.0),
+              child: Column(
+                children: [
+                  widget.isJoinDate
+                      ? const JoinDateShortcuts()
+                      : const ResignDateShortcuts(),
+                  const SizedBox(height: 25.0),
+                  BlocBuilder<DatePickerCubit, MyDateTime>(
+                      builder: (context, myDate) {
+                    myDateTime = myDate;
+                    return MyCalendar(
+                      selectedDate: myDate.date,
+                      padding: EdgeInsets.zero,
+                      currentDateDecoration:
+                          !widget.isJoinDate ? const BoxDecoration() : null,
+                      minDate: DateTime(2000, 1, 1),
+                      maxDate: DateTime.now().add(const Duration(days: 182)),
+                      slidersColor: const Color(0xff949C9E),
+                      slidersSize: 45,
+                      disbaledCellsTextStyle: Theme.of(context)
                           .textTheme
-                          .titleSmall!
-                          .copyWith(color: Colors.red, fontSize: 12))),
-            );
-          }),
-          const Divider(thickness: 2.0, height: 0.0),
-          Container(
-            margin: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                const Icon(CustomIcons.calendar),
-                const SizedBox(width: 12.0),
-                BlocBuilder<DatePickerCubit, MyDateTime>(
-                    builder: (context, myDate) {
-                  return Text(myDate.dateString,
-                      style: Theme.of(context).textTheme.titleMedium);
-                }),
-                const Spacer(),
-                SizedBox(
-                  width: 74,
-                  height: 40,
-                  child: TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text(Strings.cancel)),
-                ),
-                const SizedBox(width: 16.0),
-                SizedBox(
+                          .titleMedium!
+                          .copyWith(
+                              fontSize: 15,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.30)),
+                      currentDateTextStyle: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(
+                              fontSize: 15,
+                              color: Theme.of(context).colorScheme.secondary),
+                      enabledCellsTextStyle: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(fontSize: 15),
+                      selectedCellTextStyle: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(fontSize: 15, color: Colors.white),
+                      leadingDateTextStyle: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18.0,
+                          color: Theme.of(context).textTheme.titleMedium!.color),
+                      daysOfTheWeekTextStyle: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(fontSize: 15),
+                      onDateSelected: (date) {
+                        context
+                            .read<DatePickerCubit>()
+                            .onDateChangeManually(date: date);
+                      },
+                    );
+                  })
+                ],
+              ),
+            ),
+            BlocBuilder<DatePickerCubit, MyDateTime>(
+                builder: (context, myDateTime) {
+              return Visibility(
+                visible: !myDateTime.isValid,
+                child: Container(
+                    margin: const EdgeInsets.all(16),
+                    child: Text(myDateTime.errorMessage,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(color: Colors.red, fontSize: 12))),
+              );
+            }),
+            const Divider(thickness: 2.0, height: 0.0),
+            Container(
+              margin: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  const Icon(CustomIcons.calendar),
+                  const SizedBox(width: 12.0),
+                  BlocBuilder<DatePickerCubit, MyDateTime>(
+                      builder: (context, myDate) {
+                    return Text(myDate.dateString,
+                        style: Theme.of(context).textTheme.titleMedium);
+                  }),
+                  const Spacer(),
+                  SizedBox(
                     width: 74,
                     height: 40,
-                    child: BlocBuilder<DatePickerCubit, MyDateTime>(
-                        builder: (context, myDateTime) {
-                      return ElevatedButton(
-                          onPressed: !myDateTime.isValid
-                              ? null
-                              : () {
-                                  Navigator.pop(context);
-                                  widget.onDateSelected(myDateTime.date);
-                                },
-                          child: const Text(Strings.save));
-                    })),
-              ],
-            ),
-          )
-        ],
+                    child: TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(Strings.cancel)),
+                  ),
+                  const SizedBox(width: 16.0),
+                  SizedBox(
+                      width: 74,
+                      height: 40,
+                      child: BlocBuilder<DatePickerCubit, MyDateTime>(
+                          builder: (context, myDateTime) {
+                        return ElevatedButton(
+                            onPressed: !myDateTime.isValid
+                                ? null
+                                : () {
+                                    Navigator.pop(context);
+                                    widget.onDateSelected(myDateTime.date);
+                                  },
+                            child: const Text(Strings.save));
+                      })),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

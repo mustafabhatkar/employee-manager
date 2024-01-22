@@ -28,7 +28,7 @@ class _AddEditEmployeePageState extends State<AddEditEmployeePage> {
   final joinDateController = TextEditingController();
   final resignDateController = TextEditingController();
   bool isEditing = false;
-  late Employee employee;
+  Employee employee = Employee();
 
   @override
   void initState() {
@@ -42,8 +42,6 @@ class _AddEditEmployeePageState extends State<AddEditEmployeePage> {
       if (widget.employee!.resignDate.isNotEmpty) {
         resignDateController.text = employee.resignDate;
       }
-    } else {
-      employee = Employee(name: "", role: "", joinDate: "");
     }
     super.initState();
   }
@@ -67,145 +65,150 @@ class _AddEditEmployeePageState extends State<AddEditEmployeePage> {
         ],
       ),
       backgroundColor: Colors.white,
-      body: Form(
-        key: _saveformKey,
-        child: Column(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-              child: Column(children: [
-                SizedBox(
-                  height: 60,
-                  child: TextFormField(
-                      controller: nameTextController,
-                      autofocus: !isEditing,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      inputFormatters: [
-                        TitleCaseTextFormatter(),
-                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
-                      ],
-                      onSaved: (value) => employee.name = value!,
-                      validator: (value) =>
-                          value!.isEmpty ? Strings.mandatory : null,
-                      keyboardType: TextInputType.name,
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.person_outline_sharp),
-                          hintText: Strings.employeeName)),
-                ),
-                const SizedBox(height: 14.0),
-                SizedBox(
-                  height: 60,
-                  child: TextFormField(
-                      controller: roleTextController,
-                      readOnly: true,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      onSaved: (value) => employee.role = value!,
-                      validator: (value) =>
-                          value!.isEmpty ? Strings.mandatory : null,
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(16.0)),
-                          ),
-                          builder: (context) {
-                            return RolesList(onRoleSelected: (selectedRole) {
-                              roleTextController.text = selectedRole;
-                            });
-                          },
-                        );
-                      },
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.work_outline),
-                          suffixIcon:
-                              Icon(Icons.arrow_drop_down_rounded, size: 40),
-                          hintText: Strings.selectRole)),
-                ),
-                const SizedBox(height: 14.0),
-                SizedBox(
-                  height: 60,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                            onTap: () => showMyDatePicker(),
-                            controller: joinDateController,
-                            readOnly: true,
-                            onSaved: (value) {
-                              if (value == Strings.today) {
-                                employee.joinDate =
-                                    DateTime.now().toEditFormat();
-                              } else {
-                                employee.joinDate = value!;
-                              }
-                            },
-                            validator: (value) =>
-                                value!.isEmpty ? Strings.mandatory : null,
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(CustomIcons.calendar),
-                            )),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 12),
-                        child: const Icon(CustomIcons.arrowRight),
-                      ),
-                      Expanded(
-                        child: TextFormField(
-                            onTap: () => showMyDatePicker(isJoinDate: false),
-                            onSaved: (value) {
-                              if (value == Strings.today) {
-                                employee.joinDate =
-                                    DateTime.now().toEditFormat();
-                              } else {
-                                employee.resignDate = value!;
-                              }
-                            },
-                            controller: resignDateController,
-                            readOnly: true,
-                            decoration: const InputDecoration(
-                                prefixIcon: Icon(CustomIcons.calendar),
-                                hintText: Strings.noDate)),
-                      ),
-                    ],
-                  ),
-                ),
-              ]),
-            ),
-            const Spacer(),
-            const Divider(thickness: 2.0, height: 0.0),
-            Container(
-                margin: const EdgeInsets.symmetric(
-                    vertical: 12.0, horizontal: 16.0),
-                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+      body: SafeArea(
+        bottom: true,
+        child: Form(
+          key: _saveformKey,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 24.0),
+                child: Column(children: [
                   SizedBox(
+                    height: 60,
+                    child: TextFormField(
+                        controller: nameTextController,
+                        autofocus: !isEditing,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        inputFormatters: [
+                          TitleCaseTextFormatter(),
+                          FilteringTextInputFormatter.allow(
+                              RegExp("[a-zA-Z ]")),
+                        ],
+                        onSaved: (value) => employee.name = value!,
+                        validator: (value) =>
+                            value!.isEmpty ? Strings.mandatory : null,
+                        keyboardType: TextInputType.name,
+                        decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.person_outline_sharp),
+                            hintText: Strings.employeeName)),
+                  ),
+                  const SizedBox(height: 14.0),
+                  SizedBox(
+                    height: 60,
+                    child: TextFormField(
+                        controller: roleTextController,
+                        readOnly: true,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        onSaved: (value) => employee.role = value!,
+                        validator: (value) =>
+                            value!.isEmpty ? Strings.mandatory : null,
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(16.0)),
+                            ),
+                            builder: (context) {
+                              return RolesList(onRoleSelected: (selectedRole) {
+                                roleTextController.text = selectedRole;
+                              });
+                            },
+                          );
+                        },
+                        decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.work_outline),
+                            suffixIcon:
+                                Icon(Icons.arrow_drop_down_rounded, size: 40),
+                            hintText: Strings.selectRole)),
+                  ),
+                  const SizedBox(height: 14.0),
+                  SizedBox(
+                    height: 60,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                              onTap: () => showMyDatePicker(),
+                              controller: joinDateController,
+                              readOnly: true,
+                              onSaved: (value) {
+                                if (value == Strings.today) {
+                                  employee.joinDate =
+                                      DateTime.now().toEditFormat();
+                                } else {
+                                  employee.joinDate = value!;
+                                }
+                              },
+                              validator: (value) =>
+                                  value!.isEmpty ? Strings.mandatory : null,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(CustomIcons.calendar),
+                              )),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 12),
+                          child: const Icon(CustomIcons.arrowRight),
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                              onTap: () => showMyDatePicker(isJoinDate: false),
+                              onSaved: (value) {
+                                if (value == Strings.today) {
+                                  employee.joinDate =
+                                      DateTime.now().toEditFormat();
+                                } else {
+                                  employee.resignDate = value!;
+                                }
+                              },
+                              controller: resignDateController,
+                              readOnly: true,
+                              decoration: const InputDecoration(
+                                  prefixIcon: Icon(CustomIcons.calendar),
+                                  hintText: Strings.noDate)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ]),
+              ),
+              const Spacer(),
+              const Divider(thickness: 2.0, height: 0.0),
+              Container(
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 16.0),
+                  child:
+                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    SizedBox(
+                        width: 74,
+                        height: 40,
+                        child: TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(Strings.cancel))),
+                    const SizedBox(width: 16.0),
+                    SizedBox(
                       width: 74,
                       height: 40,
-                      child: TextButton(
+                      child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            if (_saveformKey.currentState!.validate()) {
+                              _saveformKey.currentState!.save();
+                              context.read<EmployeeCubit>().addEmployee(
+                                  employee: employee, isEditing: isEditing);
+          
+                              context.read<EmployeeCubit>().refreshData();
+                              Navigator.pop(context, Strings.save);
+                            }
                           },
-                          child: const Text(Strings.cancel))),
-                  const SizedBox(width: 16.0),
-                  SizedBox(
-                    width: 74,
-                    height: 40,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          if (_saveformKey.currentState!.validate()) {
-                            _saveformKey.currentState!.save();
-                            context.read<EmployeeCubit>().addEmployee(
-                                employee: employee, isEditing: isEditing);
-
-                            context.read<EmployeeCubit>().refreshData();
-                            Navigator.pop(context, Strings.save);
-                          }
-                        },
-                        child: const Text(Strings.save)),
-                  )
-                ]))
-          ],
+                          child: const Text(Strings.save)),
+                    )
+                  ]))
+            ],
+          ),
         ),
       ),
     );

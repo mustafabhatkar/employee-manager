@@ -1,8 +1,8 @@
 import 'package:employee_manager/cubits/employee_cubit.dart';
 import 'package:employee_manager/data/models/employee_podo.dart';
 import 'package:employee_manager/ui/screens/add_edit_page.dart';
-import 'package:employee_manager/ui/widgets/emp_list_item.dart';
-import 'package:employee_manager/ui/widgets/emp_list_label.dart';
+
+import 'package:employee_manager/ui/widgets/employee_list.dart';
 import 'package:employee_manager/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,70 +33,26 @@ class _HomePageState extends State<HomePage> {
               context.read<EmployeeCubit>().currentEmployees;
           List<Employee> previousEmployees =
               context.read<EmployeeCubit>().previousEmployees;
-
+        
           return employees.isEmpty
               ? Center(
                   child: SvgPicture.asset("assets/placeholders/no_data.svg"))
               : SlidableAutoCloseBehavior(
                   child: ListView(
+                    physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      Visibility(
-                        visible: currentEmployees.isNotEmpty,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const EmpListLabel(text: Strings.currentEmployees),
-                            ListView.separated(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: currentEmployees.length,
-                                separatorBuilder: (context, index) =>
-                                    const Divider(thickness: 1.0, height: 0.0),
-                                itemBuilder: (contex, index) {
-                                  return EmpListItem(
-                                    index: index,
-                                    onDelete: () => context
-                                        .read<EmployeeCubit>()
-                                        .onDeleteEmployeee(
-                                            scaffoldKey: _scaffoldKey,
-                                            index: index,
-                                            employee: currentEmployees[index]),
-                                    employee: currentEmployees[index],
-                                    scaffoldKey: _scaffoldKey,
-                                  );
-                                }),
-                          ],
-                        ),
-                      ),
-                      Visibility(
-                        visible: previousEmployees.isNotEmpty,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const EmpListLabel(text: Strings.previousEmployees),
-                            ListView.separated(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: previousEmployees.length,
-                                separatorBuilder: (context, index) =>
-                                    const Divider(thickness: 1.0, height: 0.0),
-                                itemBuilder: (context, index) => EmpListItem(
-                                      index: index,
-                                      onDelete: () => context
-                                          .read<EmployeeCubit>()
-                                          .onDeleteEmployeee(
-                                              scaffoldKey: _scaffoldKey,
-                                              index: index,
-                                              employee:
-                                                  previousEmployees[index]),
-                                      employee: previousEmployees[index],
-                                      scaffoldKey: _scaffoldKey,
-                                    ))
-                          ],
-                        ),
-                      ),
+                      EmployeeList(
+                          title: Strings.currentEmployees,
+                          employees: currentEmployees,
+                          scaffoldKey: _scaffoldKey,
+                          allEmployeesCount: currentEmployees.length +
+                              previousEmployees.length),
+                      EmployeeList(
+                          title: Strings.previousEmployees,
+                          employees: previousEmployees,
+                          scaffoldKey: _scaffoldKey,
+                          allEmployeesCount: currentEmployees.length +
+                              previousEmployees.length),
                       Container(
                           margin: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 12),

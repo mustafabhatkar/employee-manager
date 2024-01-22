@@ -8,10 +8,13 @@ class EmpListLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        width: double.infinity,
+        color: Theme.of(context).colorScheme.background,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Text(text,
             style: GoogleFonts.roboto(
                 color: Theme.of(context).colorScheme.secondary,
-                fontWeight: FontWeight.w500,fontSize: 16)));
+                fontWeight: FontWeight.w500,
+                fontSize: 16)));
   }
 }

@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 part '../data_sources/data_adapter.g.dart';
 
 @HiveType(typeId: 0)
-class Employee extends HiveObject{
+class Employee extends HiveObject {
   @HiveField(0)
   String name;
 
@@ -16,8 +16,8 @@ class Employee extends HiveObject{
   String resignDate;
 
   Employee(
-      {required this.name,
-      required this.role,
-      required this.joinDate,
+      {this.name = "",
+      this.role = "",
+      this.joinDate = "",
       this.resignDate = ""});
 }
