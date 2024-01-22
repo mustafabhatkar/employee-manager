@@ -1,16 +1,26 @@
+import 'package:employee_manager/cubits/employee_cubit.dart';
 import 'package:employee_manager/data/models/employee_podo.dart';
 import 'package:employee_manager/ui/screens/add_edit_page.dart';
 import 'package:employee_manager/ui/widgets/custom_icons.dart';
 import 'package:employee_manager/utils/extension.dart';
+import 'package:employee_manager/utils/strings.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EmpListItem extends StatelessWidget {
   final Employee employee;
+  final int index;
+  final GlobalKey<ScaffoldMessengerState> scaffoldKey;
   final Function onDelete;
-  const EmpListItem({super.key, required this.employee, required this.onDelete});
+  const EmpListItem(
+      {super.key,
+      required this.employee,
+      required this.onDelete,
+      required this.index,
+      required this.scaffoldKey});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +28,18 @@ class EmpListItem extends StatelessWidget {
       onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => AddEditEmployeePage(employee: employee))),
+              builder: (context) =>
+                  AddEditEmployeePage(employee: employee))).then((result) {
+        if (result != null && result is String && result == Strings.delete) {
+          context.read<EmployeeCubit>().onDeleteEmployeee(
+              index: index, employee: employee, scaffoldKey: scaffoldKey);
+        } else if (result != null &&
+            result is String &&
+            result == Strings.save) {
+          scaffoldKey.currentState
+              ?.showSnackBar(const SnackBar(content: Text(Strings.dataSaved)));
+        }
+      }),
       child: Slidable(
         endActionPane: ActionPane(
           extentRatio: 0.2,
@@ -26,7 +47,7 @@ class EmpListItem extends StatelessWidget {
           children: [
             SlidableAction(
               autoClose: true,
-              onPressed: (context) =>onDelete(),
+              onPressed: (context) => onDelete(),
               backgroundColor: const Color(0xFFF34642),
               foregroundColor: Colors.white,
               icon: CustomIcons.delete,

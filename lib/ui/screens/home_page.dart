@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:employee_manager/cubits/employee_cubit.dart';
 import 'package:employee_manager/data/models/employee_podo.dart';
 import 'package:employee_manager/ui/screens/add_edit_page.dart';
@@ -8,6 +6,7 @@ import 'package:employee_manager/ui/widgets/emp_list_label.dart';
 import 'package:employee_manager/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HomePage extends StatefulWidget {
@@ -38,75 +37,92 @@ class _HomePageState extends State<HomePage> {
           return employees.isEmpty
               ? Center(
                   child: SvgPicture.asset("assets/placeholders/no_data.svg"))
-              : ListView(
-                  children: [
-                    Visibility(
-                      visible: currentEmployees.isNotEmpty,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const EmpListLabel(text: Strings.currentEmployees),
-                          ListView.separated(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: currentEmployees.length,
-                              separatorBuilder: (context, index) =>
-                                  const Divider(thickness: 1.0, height: 0.0),
-                              itemBuilder: (contex, index) {
-                                return EmpListItem(
+              : SlidableAutoCloseBehavior(
+                  child: ListView(
+                    children: [
+                      Visibility(
+                        visible: currentEmployees.isNotEmpty,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const EmpListLabel(text: Strings.currentEmployees),
+                            ListView.separated(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: currentEmployees.length,
+                                separatorBuilder: (context, index) =>
+                                    const Divider(thickness: 1.0, height: 0.0),
+                                itemBuilder: (contex, index) {
+                                  return EmpListItem(
+                                    index: index,
                                     onDelete: () => context
                                         .read<EmployeeCubit>()
                                         .onDeleteEmployeee(
                                             scaffoldKey: _scaffoldKey,
                                             index: index,
                                             employee: currentEmployees[index]),
-                                    employee: currentEmployees[index]);
-                              }),
-                        ],
+                                    employee: currentEmployees[index],
+                                    scaffoldKey: _scaffoldKey,
+                                  );
+                                }),
+                          ],
+                        ),
                       ),
-                    ),
-                    Visibility(
-                      visible: previousEmployees.isNotEmpty,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const EmpListLabel(text: Strings.previousEmployees),
-                          ListView.separated(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: previousEmployees.length,
-                              separatorBuilder: (context, index) =>
-                                  const Divider(thickness: 1.0, height: 0.0),
-                              itemBuilder: (context, index) => EmpListItem(
-                                  onDelete: () => context
-                                      .read<EmployeeCubit>()
-                                      .onDeleteEmployeee(
-                                          scaffoldKey: _scaffoldKey,
-                                          index: index,
-                                          employee: previousEmployees[index]),
-                                  employee: previousEmployees[index]))
-                        ],
+                      Visibility(
+                        visible: previousEmployees.isNotEmpty,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const EmpListLabel(text: Strings.previousEmployees),
+                            ListView.separated(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: previousEmployees.length,
+                                separatorBuilder: (context, index) =>
+                                    const Divider(thickness: 1.0, height: 0.0),
+                                itemBuilder: (context, index) => EmpListItem(
+                                      index: index,
+                                      onDelete: () => context
+                                          .read<EmployeeCubit>()
+                                          .onDeleteEmployeee(
+                                              scaffoldKey: _scaffoldKey,
+                                              index: index,
+                                              employee:
+                                                  previousEmployees[index]),
+                                      employee: previousEmployees[index],
+                                      scaffoldKey: _scaffoldKey,
+                                    ))
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
-                        child: Text(Strings.swipeLeft,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(fontSize: 15.0)))
-                  ],
+                      Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          child: Text(Strings.swipeLeft,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(fontSize: 15.0)))
+                    ],
+                  ),
                 );
         }),
         floatingActionButton: FloatingActionButton.small(
           onPressed: () async {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const AddEditEmployeePage()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddEditEmployeePage()))
+                .then((result) {
+              if (result != null &&
+                  result is String &&
+                  result == Strings.save) {
+                _scaffoldKey.currentState?.showSnackBar(
+                    const SnackBar(content: Text(Strings.dataSaved)));
+              }
+            });
           },
           tooltip: Strings.addEmployee,
           shape:

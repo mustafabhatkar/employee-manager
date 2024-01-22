@@ -59,7 +59,10 @@ class _AddEditEmployeePageState extends State<AddEditEmployeePage> {
           Visibility(
             visible: isEditing,
             child: IconButton(
-                onPressed: () {}, icon: const Icon(CustomIcons.delete)),
+                onPressed: () {
+                  Navigator.pop(context, Strings.delete);
+                },
+                icon: const Icon(CustomIcons.delete)),
           )
         ],
       ),
@@ -181,7 +184,7 @@ class _AddEditEmployeePageState extends State<AddEditEmployeePage> {
                       height: 40,
                       child: TextButton(
                           onPressed: () {
-                            Navigator.pop(context, false);
+                            Navigator.pop(context);
                           },
                           child: const Text(Strings.cancel))),
                   const SizedBox(width: 16.0),
@@ -194,11 +197,9 @@ class _AddEditEmployeePageState extends State<AddEditEmployeePage> {
                             _saveformKey.currentState!.save();
                             context.read<EmployeeCubit>().addEmployee(
                                 employee: employee, isEditing: isEditing);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(Strings.dataSaved)));
+
                             context.read<EmployeeCubit>().refreshData();
-                            Navigator.pop(context, true);
+                            Navigator.pop(context, Strings.save);
                           }
                         },
                         child: const Text(Strings.save)),
@@ -221,19 +222,31 @@ class _AddEditEmployeePageState extends State<AddEditEmployeePage> {
               contentPadding: EdgeInsets.zero,
               insetPadding: const EdgeInsets.all(16.0),
               content: BlocProvider(
-                create: (_) => DatePickerCubit(isJoinDate: isJoinDate),
+                create: (_) => DatePickerCubit(
+                  isJoinDate: isJoinDate,
+                  joinDate: joinDateController.text.isNotEmpty
+                      ? (joinDateController.text == Strings.today
+                          ? DateTime.now()
+                          : joinDateController.text.toDateTime())
+                      : null,
+                  resignDate: resignDateController.text.isNotEmpty
+                      ? (resignDateController.text == Strings.today
+                          ? DateTime.now()
+                          : resignDateController.text.toDateTime())
+                      : null,
+                ),
                 child: MyDatePicker(
                     onDateSelected: (date) {
                       if (isJoinDate) {
                         if (date != null) {
                           joinDateController.text =
-                              DateTime.now().compareOnlyDateTo(date)
+                              DateTime.now().isSameDateAs(date)
                                   ? Strings.today
                                   : date.toEditFormat();
                         }
                       } else {
                         resignDateController.text = date != null
-                            ? (DateTime.now().compareOnlyDateTo(date)
+                            ? (DateTime.now().isSameDateAs(date)
                                 ? Strings.today
                                 : date.toEditFormat())
                             : "";

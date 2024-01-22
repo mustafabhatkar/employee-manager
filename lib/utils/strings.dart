@@ -27,6 +27,12 @@ class Strings {
 
   //Error
   static const mandatory = "Mandatory";
+  static const errorJoinDate =
+      "Invalid selection: Join date cannot be after the resign date";
+  static const errorResignDate =
+      "Invalid selection: Resign date cannot be before the join date";
+  static const errorSameJoinResignDate =
+      "Invalid selection: Jon date and resign date can't be same";
 
   //Success
   static const dataSaved = "Date saved successfully!";

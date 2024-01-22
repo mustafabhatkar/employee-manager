@@ -16,7 +16,7 @@ extension FormatDateExtension on DateTime {
   String toEditFormat() => DateFormat('d MMM yyyy').format(this);
   String toDisplayFormat() => DateFormat('d MMM, yyyy').format(this);
 
-  bool compareOnlyDateTo(DateTime date2) {
+  bool isSameDateAs(DateTime date2) {
     DateTime newDate1 = DateTime(year, month, day);
     DateTime newDate2 = DateTime(date2.year, date2.month, date2.day);
     return newDate1.isAtSameMomentAs(newDate2);

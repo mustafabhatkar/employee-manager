@@ -91,6 +91,19 @@ class _MyDatePickerState extends State<MyDatePicker> {
               ],
             ),
           ),
+          BlocBuilder<DatePickerCubit, MyDateTime>(
+              builder: (context, myDateTime) {
+            return Visibility(
+              visible: !myDateTime.isValid,
+              child: Container(
+                  margin: const EdgeInsets.all(16),
+                  child: Text(myDateTime.errorMessage,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleSmall!
+                          .copyWith(color: Colors.red, fontSize: 12))),
+            );
+          }),
           const Divider(thickness: 2.0, height: 0.0),
           Container(
             margin: const EdgeInsets.all(16.0),
@@ -115,12 +128,17 @@ class _MyDatePickerState extends State<MyDatePicker> {
                 SizedBox(
                     width: 74,
                     height: 40,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          widget.onDateSelected(myDateTime.date);
-                        },
-                        child: const Text(Strings.save))),
+                    child: BlocBuilder<DatePickerCubit, MyDateTime>(
+                        builder: (context, myDateTime) {
+                      return ElevatedButton(
+                          onPressed: !myDateTime.isValid
+                              ? null
+                              : () {
+                                  Navigator.pop(context);
+                                  widget.onDateSelected(myDateTime.date);
+                                },
+                          child: const Text(Strings.save));
+                    })),
               ],
             ),
           )
