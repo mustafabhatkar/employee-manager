@@ -11,7 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class MyDatePicker extends StatefulWidget {
   final bool isJoinDate;
-  final Function(DateTime) onDateSelected;
+  final Function(DateTime?) onDateSelected;
   const MyDatePicker(
       {super.key, this.isJoinDate = true, required this.onDateSelected});
 
@@ -20,7 +20,7 @@ class MyDatePicker extends StatefulWidget {
 }
 
 class _MyDatePickerState extends State<MyDatePicker> {
-  DateTime currentDate = DateTime.now();
+  late MyDateTime myDateTime;
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +40,12 @@ class _MyDatePickerState extends State<MyDatePicker> {
                 const SizedBox(height: 25.0),
                 BlocBuilder<DatePickerCubit, MyDateTime>(
                     builder: (context, myDate) {
+                  myDateTime = myDate;
                   return MyCalendar(
                     selectedDate: myDate.date,
                     padding: EdgeInsets.zero,
-                    currentDateDecoration: myDate.dateString == Strings.noDate
-                        ? const BoxDecoration()
-                        : null,
+                    currentDateDecoration:
+                        !widget.isJoinDate ? const BoxDecoration() : null,
                     minDate: DateTime(2000, 1, 1),
                     maxDate: DateTime.now().add(const Duration(days: 182)),
                     slidersColor: const Color(0xff949C9E),
@@ -82,7 +82,6 @@ class _MyDatePickerState extends State<MyDatePicker> {
                         .titleMedium!
                         .copyWith(fontSize: 15),
                     onDateSelected: (date) {
-                      currentDate = date;
                       context
                           .read<DatePickerCubit>()
                           .onDateChangeManually(date: date);
@@ -119,7 +118,7 @@ class _MyDatePickerState extends State<MyDatePicker> {
                     child: ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
-                          widget.onDateSelected(currentDate);
+                          widget.onDateSelected(myDateTime.date);
                         },
                         child: const Text(Strings.save))),
               ],

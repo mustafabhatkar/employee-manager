@@ -8,7 +8,7 @@ class DatePickerCubit extends Cubit<MyDateTime> {
   DatePickerCubit({required this.isJoinDate})
       : super(isJoinDate
             ? MyDateTime(
-                date: null,
+                date: DateTime.now(),
                 dateString: DateTime.now().toEditFormat(),
                 selectedShortcut: 0)
             : MyDateTime(
@@ -26,17 +26,17 @@ class DatePickerCubit extends Cubit<MyDateTime> {
 
     int selectedShortcut = -1;
     if (isJoinDate) {
-      if (compareOnlyDates(date, currentDate)) {
+      if (date.compareOnlyDateTo(currentDate)) {
         selectedShortcut = 0;
-      } else if (compareOnlyDates(date, nextMonday)) {
+      } else if (date.compareOnlyDateTo(nextMonday)) {
         selectedShortcut = 1;
-      } else if (compareOnlyDates(date, nextTuesday)) {
+      } else if (date.compareOnlyDateTo(nextTuesday)) {
         selectedShortcut = 2;
-      } else if (compareOnlyDates(date, nextWeek)) {
+      } else if (date.compareOnlyDateTo(nextWeek)) {
         selectedShortcut = 3;
       }
     } else {
-      if (compareOnlyDates(date, currentDate)) {
+      if (date.compareOnlyDateTo(currentDate)) {
         selectedShortcut = 1;
       }
     }
@@ -104,10 +104,5 @@ class DatePickerCubit extends Cubit<MyDateTime> {
     emit(myDateTime);
   }
 
-  bool compareOnlyDates(DateTime date1, DateTime date2) {
-    DateTime newDate1 = DateTime(date1.year, date1.month, date1.day);
-    DateTime newDate2 = DateTime(date2.year, date2.month, date2.day);
-
-    return newDate1.isAtSameMomentAs(newDate2);
-  }
+  
 }

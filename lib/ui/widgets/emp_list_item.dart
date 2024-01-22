@@ -1,14 +1,16 @@
 import 'package:employee_manager/data/models/employee_podo.dart';
 import 'package:employee_manager/ui/screens/add_edit_page.dart';
 import 'package:employee_manager/ui/widgets/custom_icons.dart';
+import 'package:employee_manager/utils/extension.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EmpListItem extends StatelessWidget {
   final Employee employee;
-
-  const EmpListItem({super.key, required this.employee});
+  final Function onDelete;
+  const EmpListItem({super.key, required this.employee, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class EmpListItem extends StatelessWidget {
           children: [
             SlidableAction(
               autoClose: true,
-              onPressed: (context) {},
+              onPressed: (context) =>onDelete(),
               backgroundColor: const Color(0xFFF34642),
               foregroundColor: Colors.white,
               icon: CustomIcons.delete,
@@ -48,9 +50,9 @@ class EmpListItem extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(height: 6.0),
                 Text(
-                    employee.resignDate == null
-                        ? "From ${employee.joinDate}"
-                        : "${employee.joinDate} - ${employee.resignDate}",
+                    employee.resignDate.isEmpty
+                        ? "From ${employee.joinDate.toDateTime().toDisplayFormat()}"
+                        : "${employee.joinDate.toDateTime().toDisplayFormat()} - ${employee.resignDate.toDateTime().toDisplayFormat()}",
                     style: Theme.of(context)
                         .textTheme
                         .titleSmall!

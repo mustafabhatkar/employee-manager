@@ -10,12 +10,13 @@ class Strings {
   //Hints
   static const employeeName = "Employee name";
   static const selectRole = "Select role";
-  
+  static const swipeLeft = "Swipe left to delete";
 
   //Buttons
   static const cancel = "Cancel";
   static const save = "Save";
   static const delete = "Delete";
+  static const undo = "Undo";
 
   //Date Picker
   static const today = "Today";
@@ -24,6 +25,12 @@ class Strings {
   static const nextTue = "Next Tuesday";
   static const afterWeek = "After 1 week";
 
+  //Error
+  static const mandatory = "Mandatory";
+
+  //Success
+  static const dataSaved = "Date saved successfully!";
+  static const dataDeleted = "Employee data has been deleted";
 
   //Role sheet options
   static List roles = [
