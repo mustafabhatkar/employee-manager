@@ -1,16 +1,13 @@
 # employee_manager
 
-A new Flutter project.
+A Flutter project following the BLoC architecture pattern using the [flutter_bloc](https://pub.dev/packages/flutter_bloc) package. It has a custom date picker with shortcuts to quickly set the date.
 
-## Getting Started
+## Screenshots
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+<img src="https://github.com/mustafabhatkar/employee-manager/assets/22981003/ba4bdfd6-7a05-42ab-8f66-e42be49cd2f9" width=480 height=1040>  <img src="https://github.com/mustafabhatkar/employee-manager/assets/22981003/b0a4287f-ada3-48d9-91ea-6d7215429bbc" width=480 height=1040>  <img src="https://github.com/mustafabhatkar/employee-manager/assets/22981003/13cc281e-1dd9-4ddc-93fe-53c1b9709074" width=480 height=1040>  <img src="https://github.com/mustafabhatkar/employee-manager/assets/22981003/635c45ee-24c1-4ebc-a9b8-2acf7e22f3dd" width=480 height=1040> 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+
